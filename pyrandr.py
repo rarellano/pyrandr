@@ -16,43 +16,63 @@ def find_devices(stdout):
 			devices.append(aux[0])
 	return devices
 
-def display_state(n):
-	# fstate = open('/home/rarellano/.config/','w')
-	pass
+def increase_display_state():
+	display_state = open('/tmp/pyrandr-state', 'w') 
+	n = get_display_state(read_display_state())
+	display_state.write((n+1)+'\n')
+	display_state.close()
 
-def get_display_state(n):
-	pass
+def read_display_state():
+	display_state = open('/tmp/pyrandr-state') 
+	number_state = display_state.readlines()
+	display_state.close()
+	return number_state[0]
+
+def get_display_state(s):
+	return  int(read_display_state())
+
+
+def check_file_state():
+	if os.path.isfile('/tmp/pyrandr-state') == False:
+		display_state = open('/tmp/pyrandr-state', 'w') 
+		display_state.write('0\n')
+		display_state.close()
 
 def xrandr_exec(devices):
-	a = devices[0]
-	b = devices[1]
 	
-	display_state(0)
+	check_file_state()
 	
 	if len(devices) == 2:
+		a = devices[0]
+		b = devices[1]
+
 		if get_display_state == 0:
+			print("Opción : " + get_display_state() )
 			os.system('xrandr --output '+ a +' --off')
 		if get_display_state == 1:
+			print("Opción : " + get_display_state() )
 			os.system('xrandr --output '+ b +' --off')
 		if get_display_state == 2:
+			print("Opción : " + get_display_state() )
 			os.system('xrandr --output '+ a +' --auto  --output '+ b +' --same-as '+ a)
 		if get_display_state == 3:
+			print("Opción : " + get_display_state() )
 			os.system('xrandr --output '+ a +' --auto  --output '+ b +' --left-of '+ a)
 		if get_display_state == 4:
+			print("Opción : " + get_display_state() )
 			os.system('xrandr --output '+ b +' --auto  --output '+ a +' --left-of '+ b)
 		
-		display_state(1)
+		increase_display_state()
+
+check_file_state()
+
+#increase_display_state()
 
 
-cmdout = command_out('xrandr').split('\n')
+print(get_display_state(read_display_state()))
 
-devs = find_devices(cmdout)
+#cmdout = command_out('xrandr').split('\n')
 
-xrandr_exec(devs)
+#devs = find_devices(cmdout)
 
-
-
-
-
-
-
+#xrandr_exec(devs)
