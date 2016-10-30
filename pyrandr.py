@@ -1,4 +1,4 @@
-#!/usr/bin/python3.5
+#!/usr/bin/python3.
 from subprocess import PIPE,run
 import os
 
@@ -59,9 +59,9 @@ def xrandr_exec(devices):
 		b = devices[1]
 
 		if get_display_state() == '0':
-			os.system('xrandr --output ' + a + ' --off' + ' --output ' + b + ' --auto')
-		if get_display_state() == '1':
 			os.system('xrandr --output ' + b + ' --off' + ' --output ' + a + ' --auto')
+		if get_display_state() == '1':
+			os.system('xrandr --output ' + a + ' --off' + ' --output ' + b + ' --auto')
 		if get_display_state() == '2':
 			os.system('xrandr --output ' + b + ' --auto  --output ' + a + ' --left-of ' + b)
 		if get_display_state() == '3': 
