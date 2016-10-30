@@ -31,18 +31,12 @@ def increase_display_state():
 		next_state = '0'		
 	display_state.write(next_state)
 	display_state.close()
-	
 
 def get_display_state():
 	display_state = open('/tmp/pyrandr-state') 
 	number_state = display_state.readlines()
 	display_state.close()
 	return number_state[0]
-
-'''
-def get_display_state(s):
-	return  int(read_display_state())
-'''
 
 def check_file_state():
 	if os.path.isfile('/tmp/pyrandr-state') == False:
@@ -55,20 +49,17 @@ def xrandr_exec(devices):
 	check_file_state()
 	
 	if len(devices) == 2:
-		a = devices[0]
-		b = devices[1]
-
+		a,b = devices[0],devices[1]
 		if get_display_state() == '0':
 			os.system('xrandr --output ' + b + ' --off' + ' --output ' + a + ' --auto')
 		if get_display_state() == '1':
 			os.system('xrandr --output ' + a + ' --off' + ' --output ' + b + ' --auto')
 		if get_display_state() == '2':
-			os.system('xrandr --output ' + b + ' --auto  --output ' + a + ' --left-of ' + b)
+			os.system('xrandr --output ' + a + ' --auto  --output ' + b + ' --right-of ' + a)
 		if get_display_state() == '3': 
-			os.system('xrandr --output ' + b + ' --auto  --output ' + a + ' --right-of ' + b)
+			os.system('xrandr --output ' + a + ' --auto  --output ' + b + ' --left-of ' + a)
 		if get_display_state() == '4':
-			os.system('xrandr --output ' + a + ' --auto  --output ' + b + ' --same-as ' + a)
-		
+			os.system('xrandr --output ' + a + ' --auto  --output ' + b + ' --same-as ' + a)	
 		increase_display_state()
 
 cmdout = command_out('xrandr').split('\n')
