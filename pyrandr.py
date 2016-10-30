@@ -8,7 +8,8 @@ def command_out(cmd):
 	c = run(cmd, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
 	return c.stdout
 
-def find_devices(stdout):
+def find_devices():
+	cmdout = command_out('xrandr').split('\n')
 	devices=[]
 	for i in cmdout:
 		if 'connected' in i and not 'disconnected' in i:
@@ -45,9 +46,7 @@ def check_file_state():
 		display_state.close()
 
 def xrandr_exec(devices):
-	
 	check_file_state()
-	
 	if len(devices) == 2:
 		a,b = devices[0],devices[1]
 		if get_display_state() == '0':
@@ -62,9 +61,8 @@ def xrandr_exec(devices):
 			os.system('xrandr --output ' + a + ' --auto  --output ' + b + ' --same-as ' + a)	
 		increase_display_state()
 
-cmdout = command_out('xrandr').split('\n')
 
-devs = find_devices(cmdout)
-
-xrandr_exec(devs)
+if __name__ == '__main__':
+	devs = find_devices()
+	xrandr_exec(devs)
 
