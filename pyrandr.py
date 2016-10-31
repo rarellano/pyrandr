@@ -10,12 +10,7 @@ def command_out(cmd):
 
 def find_devices():
 	cmdout = command_out('xrandr').split('\n')
-	devices=[]
-	for i in cmdout:
-		if 'connected' in i and not 'disconnected' in i:
-			aux=i.split(' ')
-			devices.append(aux[0])
-	return devices
+	return [i.split(' ')[0] for i in cmdout if 'connected' in i and not 'disconnected' in i]
 
 def increase_display_state():
 	current_state = get_display_state()
@@ -60,7 +55,6 @@ def xrandr_exec(devices):
 		if get_display_state() == '4':
 			os.system('xrandr --output ' + a + ' --auto  --output ' + b + ' --same-as ' + a)	
 		increase_display_state()
-
 
 if __name__ == '__main__':
 	devs = find_devices()
