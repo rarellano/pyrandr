@@ -58,11 +58,6 @@ def xrandr_exec(devices):
         increase_display_state()
 
 
-'''
-print(get_display_state())
-increase_display_state()
-'''
-
 if __name__ == '__main__':
     devs = find_devices()
     xrandr_exec(devs)
