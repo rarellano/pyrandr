@@ -4,7 +4,13 @@ import os
 
 # PyRandr Project
 
-states = ['0', '1', '2', '3', '4']
+states = [
+    'xrandr --output {b} --off --output {a} --auto',
+    'xrandr --output {a} --off --output {b} --auto',
+    'xrandr --output {a} --auto --output {b} --right-of {a}',
+    'xrandr --output {a} --auto --output {b} --left-of {a}',
+    'xrandr --output {a} --auto --output {b} --same-as {a}',
+]
 
 
 def command_out(cmd):
@@ -19,42 +25,34 @@ def find_devices():
 
 def increase_display_state():
     current_state = get_display_state()
-    file_state = open('/tmp/pyrandr-state', 'w')
-    if states.index(current_state) == (len(states) - 1):
-        file_state.write(states[0])
-    else:
-        file_state.write(states[states.index(current_state) + 1])
-    file_state.close()
+    next_state = (current_state + 1) % len(states)
+
+    with open('/tmp/pyrandr-state', 'w') as display_state_file:
+        display_state_file.write(str(next_state))
 
 
 def get_display_state():
-    display_state = open('/tmp/pyrandr-state')
-    number_state = display_state.readlines()
-    display_state.close()
-    return number_state[0]
+    with open('/tmp/pyrandr-state') as display_state_file:
+        number_state = display_state_file.read()
+
+    return int(number_state)
 
 
 def check_file_state():
-    if os.path.isfile('/tmp/pyrandr-state') == False:
-        display_state = open('/tmp/pyrandr-state', 'w')
-        display_state.write('0')
-        display_state.close()
+    if not os.path.isfile('/tmp/pyrandr-state'):
+        with open('/tmp/pyrandr-state', 'w') as display_state_file:
+            display_state_file.write('0')
 
 
 def xrandr_exec(devices):
     check_file_state()
     if len(devices) == 2:
         a, b = devices[0], devices[1]
-        if get_display_state() == '0':
-            os.system('xrandr --output ' + b + ' --off' + ' --output ' + a + ' --auto')
-        if get_display_state() == '1':
-            os.system('xrandr --output ' + a + ' --off' + ' --output ' + b + ' --auto')
-        if get_display_state() == '2':
-            os.system('xrandr --output ' + a + ' --auto  --output ' + b + ' --right-of ' + a)
-        if get_display_state() == '3':
-            os.system('xrandr --output ' + a + ' --auto  --output ' + b + ' --left-of ' + a)
-        if get_display_state() == '4':
-            os.system('xrandr --output ' + a + ' --auto  --output ' + b + ' --same-as ' + a)
+
+        current_state = get_display_state()
+        command = states[current_state]
+        os.system(command.format(**{"a" : a, "b" : b}))
+
         increase_display_state()
 
 
