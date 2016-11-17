@@ -43,6 +43,13 @@ def check_file_state():
         with open('/tmp/pyrandr-state', 'w') as display_state_file:
             display_state_file.write('0')
 
+def get_config_file():
+#   Comprobar que el fichero tiene configuraciones.
+#   Si tiene menos de dos configuraciones, se alternara entre la pantalla principal y la configuracion del usuario.
+    if os.path.isfile('/tmp/pyrandr-state'):
+        with open('/home/$USER/.config/pyrandr') as config_file:
+            states = config_file.readlines()
+
 
 def xrandr_exec(devices):
     check_file_state()
