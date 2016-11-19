@@ -12,3 +12,14 @@ Esta aplicación depende de xrandr que viene instalada por defecto en la mayorí
     Conf 2:  Escritorio extendido Pantalla A a la izquierda de la Pantalla B.
     Conf 3:  Escritorio extendido Pantalla A a la derecha de la Pantalla B.
     Conf 4:  Pantalla B clondada de la Pantalla A.
+
+# Uso de fichero de configuración externo
+	Crear un fichero con el nombre pyrandr en /home/usuario/.config/, quedaría como /home/usuario/.config/pyrandr
+	Cada configuración deberá ir en una linea diferente. 
+	La configuración será el comando xrandr necesario, salvo que llamaremos a las pantallas {a} y {b} para tener una configuración genérica. 
+
+	Ejemplo de fichero de configuración:
+		xrandr --output {b} --off --output {a} --auto
+		xrandr --output {a} --off --output {b} --auto
+		xrandr --output {a} --auto --output {b} --same-as {a}
+
