@@ -10,5 +10,5 @@ Esta aplicación depende de xrandr que viene instalada por defecto en la mayorí
     Conf 0:  Pantalla A (Encendida) y Pantalla B (Apagada).
     Conf 1:  Pantalla B (Encendida) y Pantalla A (Apagada).
     Conf 2:  Escritorio extendido Pantalla A a la izquierda de la Pantalla B.
-    Conf 3:  Escritorio extendido Pantalla A a la derexha de la Pantalla B.
+    Conf 3:  Escritorio extendido Pantalla A a la derecha de la Pantalla B.
     Conf 4:  Pantalla B clondada de la Pantalla A.
