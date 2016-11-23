@@ -17,9 +17,14 @@ def find_devices():
 
 
 def get_config_file():
+    check_file_state()
     if os.path.isfile(os.environ['HOME'] + '/.config/pyrandr'):
         with open(os.environ['HOME']+'/.config/pyrandr') as config_file:
-           return [x.replace('\n','') for x in config_file.readlines()]
+            res = [x.replace('\n','') for x in config_file.readlines()]
+            if get_display_state() >= len(res):
+                with open('/tmp/pyrandr-state', 'w') as display_state_file:
+                    display_state_file.write('0')
+        return res
     else:
         return [
             'xrandr --output {b} --off --output {a} --auto',
@@ -62,4 +67,7 @@ def xrandr_exec(devices):
 if __name__ == '__main__':
     devs = find_devices()
     xrandr_exec(devs)
+
+
+
 
