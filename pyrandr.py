@@ -6,6 +6,8 @@ import os
 
 states = None
 
+syntax = ['|','&','#','!',]
+
 def command_out(cmd):
     c = run(cmd, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
     return c.stdout
@@ -20,7 +22,11 @@ def get_config_file():
     check_file_state()
     if os.path.isfile(os.environ['HOME'] + '/.config/pyrandr'):
         with open(os.environ['HOME']+'/.config/pyrandr') as config_file:
-            res = [x.replace('\n','') for x in config_file.readlines()]
+            res = [x.replace('\n','')
+                    for x in config_file.readlines()
+                    if x[:6] == 'xrandr' and ('{a}' in x or '{b}' in x)
+                    and not ('&' in x or '|' in x or '#' in x or '|' in x )
+                    ]
             if get_display_state() >= len(res):
                 with open('/tmp/pyrandr-state', 'w') as display_state_file:
                     display_state_file.write('0')
