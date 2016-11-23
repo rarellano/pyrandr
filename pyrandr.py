@@ -8,6 +8,15 @@ states = None
 
 syntax = ['|','&','#','!',]
 
+default_states = [
+            'xrandr --output {b} --off --output {a} --auto',
+            'xrandr --output {a} --off --output {b} --auto',
+            'xrandr --output {a} --auto --output {b} --right-of {a}',
+            'xrandr --output {a} --auto --output {b} --left-of {a}',
+            'xrandr --output {a} --auto --output {b} --same-as {a}',
+            ]
+
+
 def command_out(cmd):
     c = run(cmd, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
     return c.stdout
@@ -18,27 +27,28 @@ def find_devices():
     return [i.split(' ')[0] for i in cmdout if 'connected' in i and not 'disconnected' in i]
 
 
+def check_syntax(command):
+    for s in syntax:
+        if s in command:
+            return False
+
+    return True
+
+
 def get_config_file():
     check_file_state()
     if os.path.isfile(os.environ['HOME'] + '/.config/pyrandr'):
         with open(os.environ['HOME']+'/.config/pyrandr') as config_file:
             res = [x.replace('\n','')
                     for x in config_file.readlines()
-                    if x[:6] == 'xrandr' and ('{a}' in x or '{b}' in x)
-                    and not ('&' in x or '|' in x or '#' in x or '|' in x )
+                    if x[:6] == 'xrandr' and ('{a}' in x or '{b}' in x) and check_syntax(x) == True
                     ]
             if get_display_state() >= len(res):
                 with open('/tmp/pyrandr-state', 'w') as display_state_file:
                     display_state_file.write('0')
         return res
     else:
-        return [
-            'xrandr --output {b} --off --output {a} --auto',
-            'xrandr --output {a} --off --output {b} --auto',
-            'xrandr --output {a} --auto --output {b} --right-of {a}',
-            'xrandr --output {a} --auto --output {b} --left-of {a}',
-            'xrandr --output {a} --auto --output {b} --same-as {a}',
-        ]
+        return default_states
 
 
 def increase_display_state():
