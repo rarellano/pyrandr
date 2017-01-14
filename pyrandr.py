@@ -1,12 +1,12 @@
-#!/usr/bin/python3.5
+#!/usr/bin/python
 from subprocess import PIPE, run
 import os
 
 # PyRandr Project
 
-states = None
+global states = None
 
-syntax = ['|','&','#','!',]
+syntax = ['|','&','#','!','./','echo','cat','rm']
 
 default_states = [
             'xrandr --output {b} --off --output {a} --auto',
@@ -31,7 +31,6 @@ def check_syntax(command):
     for s in syntax:
         if s in command:
             return False
-
     return True
 
 
@@ -77,13 +76,13 @@ def xrandr_exec(devices):
         a, b = devices[0], devices[1]
         current_state = get_display_state()
         command = states[current_state]
-        os.system(command.format(**{"a" : a, "b" : b}))
+        if os.system(command.format(**{"a" : a, "b" : b})) != 0:
+            with open(os.environ['HOME'] + '/.config/pyrandr.log') as error_log:
+                error_log.write("SYNTAX ERROR: " + command)
         increase_display_state()
+
 
 if __name__ == '__main__':
     devs = find_devices()
     xrandr_exec(devs)
-
-
-
 
