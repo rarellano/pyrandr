@@ -2,6 +2,10 @@
 Es un pequeño script que hace uso de xrandr para cambiar la configuración de 2 pantallas.
 Está pensado para ser un shortcut y no tener que abrir aplicaciones mas complejas como por ejemplo: arandr u otras. 
 
+Máximo dos pantallas, en caso de existir mas de dos pantallas, deberá hacerse uso de la opción --exclude.
+
+Si solo encuentra una pantalla, activará esta.
+
 Esta aplicación depende de xrandr que viene instalada por defecto en la mayoría de las distribuciones GNU/Linux.
 
 # Uso (Dos pantallas):

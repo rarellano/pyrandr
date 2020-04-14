@@ -31,10 +31,14 @@ def command_out(cmd):
 
 
 def exclude_devices(devices, exclude_devices_list):
+    if len(devices) == 1:
+        return devices
+    
     clean_devices_list = list()
     for device in devices:
         if not device in exclude_devices_list:
             clean_devices_list.append(device)
+
     return clean_devices_list
 
 
@@ -74,12 +78,12 @@ def xrandr_exec(devices, exc_devs):
     check_file_state()
     if len(devices) == 2:
         a, b, devices_off = devices[0], devices[1], exclude_devices_str(exc_devs)
-
         current_state = get_display_state()
         command = states[current_state]
         os.system(command.format(**{"a" : a, "b" : b, "devices_off": devices_off}))
-
         increase_display_state()
+    elif len(devices) == 1:
+        os.system("xrandr --output {c} --auto".format(c=devices[0]))
     else:
         print("More than two screens have been detected. Use the option -e (--exclude)")
 
